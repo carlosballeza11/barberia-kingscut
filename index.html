@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The King's Cut - Barbería</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#111214;
+      --card:#1b1b1d;
+      --muted:#bdbdbd;
+      --gold:#d4af37;
+      --white:#ffffff;
+      --accent:#e6e6e6;
+      --glass: rgba(255,255,255,0.04);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Poppins",system-ui,Arial;
+      background:var(--bg);
+      color:var(--accent);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
+
+    /* NAV */
+    .nav{
+      position:fixed;
+      top:0; left:0; right:0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:16px 28px;
+      gap:12px;
+      z-index:50;
+      background: linear-gradient(180deg, rgba(17,17,20,0.6), rgba(17,17,20,0.15));
+      backdrop-filter: blur(6px);
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+    }
+    .brand img{width:52px; height:52px; object-fit:contain; border-radius:8px;}
+    .brand .title{font-weight:700; color:var(--white); letter-spacing:0.6px;}
+    .menu{display:flex; gap:18px; align-items:center}
+    .menu a{
+      color:var(--muted);
+      text-decoration:none;
+      font-weight:600;
+      font-size:14px;
+      padding:8px 10px;
+    }
+    .menu a:hover{color:var(--white)}
+    .cta{
+      background:var(--gold);
+      color:#111;
+      padding:8px 14px;
+      border-radius:8px;
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    /* HERO */
+    .hero{
+      min-height:72vh;
+      display:grid;
+      place-items:center;
+      padding:120px 20px 60px;
+      background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('hero.jpg');
+      background-size:cover;
+      background-position:center;
+      color:var(--white);
+      text-align:center;
+    }
+    .hero .inner{max-width:1100px}
+    .hero h1{font-size:44px; margin:0 0 12px; letter-spacing:1px;}
+    .hero p{color:var(--muted); margin:0 0 16px}
+    .hero .actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+    .btn{display:inline-block; padding:12px 18px; border-radius:10px; text-decoration:none; font-weight:600}
+    .btn-primary{background:var(--gold); color:#111}
+    .btn-ghost{background:transparent; border:1px solid rgba(255,255,255,0.12); color:var(--white)}
+
+    /* LAYOUT */
+    .container{max-width:1100px;margin:40px auto;padding:0 18px}
+
+    /* SERVICES */
+    .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px}
+    .card{background:var(--card); padding:18px; border-radius:12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5)}
+    .card h3{margin:0 0 8px; color:var(--white)}
+    .muted{color:var(--muted); font-size:0.95rem}
+
+    /* STORE */
+    .product{
+      display:flex; gap:12px; align-items:center;
+    }
+    .product img{width:90px; height:90px; object-fit:cover; border-radius:10px; flex-shrink:0}
+    .product .info{flex:1}
+    .price{font-weight:700; color:var(--gold)}
+    .add-btn{background:transparent; color:var(--white); border:1px solid rgba(255,255,255,0.08); padding:8px 10px; border-radius:8px; cursor:pointer}
+
+    /* FORM */
+    form label{display:block; font-size:0.95rem; margin-bottom:6px; color:var(--muted)}
+    input,textarea,select{
+      width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05);
+      background:transparent; color:var(--accent);
+      outline:none;
+    }
+    .row{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
+    .small{font-size:0.9rem;color:var(--muted); margin-top:6px}
+
+    footer{
+      margin-top:40px; padding:28px; background:linear-gradient(0deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+      color:var(--muted); text-align:center; border-top:1px solid rgba(255,255,255,0.03)
+    }
+
+    /* FLOATING CONTACT */
+    .float-actions{
+      position:fixed; right:18px; bottom:18px; display:flex; flex-direction:column; gap:12px; z-index:60
+    }
+    .circle{
+      width:54px; height:54px; border-radius:50%; background:var(--gold); display:grid; place-items:center; color:#111; text-decoration:none; box-shadow:0 8px 20px rgba(0,0,0,0.45)
+    }
+
+    /* CART */
+    .cart-panel{
+      position:fixed; right:18px; top:90px; width:320px; max-height:70vh; overflow:auto; background:var(--card);
+      padding:16px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.6); z-index:70;
+      display:none;
+    }
+    .cart-line{display:flex; justify-content:space-between; margin-bottom:8px}
+    .cart-empty{color:var(--muted); text-align:center; padding:10px}
+
+    /* responsive */
+    @media (max-width:820px){
+      .menu{display:none}
+      .row{grid-template-columns:1fr}
+      .nav{padding:12px}
+      .brand img{width:44px; height:44px}
+      .hero h1{font-size:32px}
+      .cart-panel{left:18px; right:18px; width:auto}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="brand">
+      <!-- reemplaza 'logo.png' por el nombre de tu archivo de logo -->
+      <img src="logo.png" alt="Logo The King's Cut" onerror="this.style.display='none'">
+      <div>
+        <div class="title">THE KING'S CUT</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">Donde cada corte te hace sentir como un rey</div>
+      </div>
+    </div>
+
+    <nav class="menu" aria-label="Menú principal">
+      <a href="#inicio">Inicio</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#tienda">Tienda</a>
+      <a href="#citas">Citas</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+
+    <div style="display:flex; gap:10px; align-items:center">
+      <a class="cta" href="#citas">Pide tu Cita</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="inner">
+      <h1>Bienvenido a <span style="color:var(--gold)">The King's Cut</span></h1>
+      <p class="muted">Cortes, afeitados tradicionales y barbería de lujo en un ambiente único.</p>
+
+      <div class="actions">
+        <a class="btn btn-primary" href="#citas">Agendar cita</a>
+        <a class="btn btn-ghost" href="#servicios">Ver servicios</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- SERVICIOS -->
+    <section class="container" id="servicios">
+      <h2 style="color:var(--white); margin:0 0 12px">Servicios</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Corte clásico</h3>
+          <p class="muted">Corte personalizado, secado y estilizado. Duración aprox. 30-45 min.</p>
+          <div style="margin-top:10px"><strong class="price">$150 MXN</strong></div>
+        </div>
+
+        <div class="card">
+          <h3>Afeitado tradicional</h3>
+          <p class="muted">Afeitado con toalla caliente y navaja, experiencia tradicional.</p>
+          <div style="margin-top:10px"><strong class="price">$180 MXN</strong></div>
+        </div>
+
+        <div class="card">
+          <h3>Arreglo de barba</h3>
+          <p class="muted">Recorte, línea y mantenimiento con aceite especial.</p>
+          <div style="margin-top:10px"><strong class="price">$120 MXN</strong></div>
+        </div>
+
+        <div class="card">
+          <h3>Combo premium</h3>
+          <p class="muted">Corte + afeitado tradicional + masaje capilar.</p>
+          <div style="margin-top:10px"><strong class="price">$350 MXN</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIENDA -->
+    <section class="container" id="tienda" style="margin-top:28px">
+      <h2 style="color:var(--white); margin:0 0 12px">Tienda</h2>
+
+      <div class="card" style="padding:14px">
+        <div class="grid" style="grid-template-columns:1fr; gap:12px">
+          <!-- Product 1 -->
+          <div class="product">
+            <img src="prod1.jpg" alt="Cera para cabello" onerror="this.src=''">
+            <div class="info">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <strong style="color:var(--white)">Cera modeladora</strong>
+                  <div class="muted">Textura media, fijación todo el día.</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="price">$120 MXN</div>
+                  <button class="add-btn" data-id="p1" data-name="Cera modeladora" data-price="120">Agregar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 2 -->
+          <div class="product">
+            <img src="prod2.jpg" alt="Aceite de barba" onerror="this.src=''">
+            <div class="info">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <strong style="color:var(--white)">Aceite para barba</strong>
+                  <div class="muted">Hidratación y brillo natural.</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="price">$180 MXN</div>
+                  <button class="add-btn" data-id="p2" data-name="Aceite para barba" data-price="180">Agregar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 3 -->
+          <div class="product">
+            <img src="prod3.jpg" alt="Shampoo barberia" onerror="this.src=''">
+            <div class="info">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <strong style="color:var(--white)">Shampoo profesional</strong>
+                  <div class="muted">Limpieza profunda y suave con aroma clásico.</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="price">$160 MXN</div>
+                  <button class="add-btn" data-id="p3" data-name="Shampoo profesional" data-price="160">Agregar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CITAS -->
+    <section class="container" id="citas" style="margin-top:28px">
+      <h2 style="color:var(--white); margin:0 0 12px">Agendar cita</h2>
+
+      <div class="card" style="padding:18px">
+        <form id="bookingForm">
+          <div class="row">
+            <div>
+              <label for="name">Nombre completo</label>
+              <input id="name" type="text" required placeholder="Ej. Juan Pérez">
+            </div>
+            <div>
+              <label for="phone">Teléfono / WhatsApp</label>
+              <input id="phone" type="tel" required placeholder="Ej. 55XXXXXXXX">
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label for="service">Servicio</label>
+            <select id="service" required>
+              <option value="">Selecciona un servicio</option>
+              <option value="Corte clásico">Corte clásico - $150 MXN</option>
+              <option value="Afeitado tradicional">Afeitado tradicional - $180 MXN</option>
+              <option value="Arreglo de barba">Arreglo de barba - $120 MXN</option>
+              <option value="Combo premium">Combo premium - $350 MXN</option>
+            </select>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <div>
+              <label for="date">Fecha</label>
+              <input id="date" type="date" required>
+            </div>
+            <div>
+              <label for="time">Hora</label>
+              <input id="time" type="time" required>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label for="notes">Notas / Preferencias (opcional)</label>
+            <textarea id="notes" rows="3" placeholder="Ej. Me gustaría degradado"></textarea>
+          </div>
+
+          <div style="margin-top:14px; display:flex; gap:10px; align-items:center">
+            <button type="submit" class="btn btn-primary">Reservar cita</button>
+            <div id="bookingMsg" class="small" aria-live="polite"></div>
+          </div>
+        </form>
+
+        <div style="margin-top:18px">
+          <h4 style="margin:0 0 8px;color:var(--white)">Tus próximas citas</h4>
+          <div id="bookingsList" class="muted"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="container" id="contacto" style="margin-top:28px; margin-bottom:28px">
+      <h2 style="color:var(--white); margin:0 0 12px">Contacto</h2>
+
+      <div class="card" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1; min-width:220px">
+          <h3 style="margin:0 0 8px;color:var(--white)">Dirección</h3>
+          <div class="muted">Col. Centro, Ciudad Valles,San Luis Potosi</div>
+
+          <h3 style="margin:14px 0 8px;color:var(--white)">Teléfono</h3>
+          <div class="muted">+52 481 126 9409</div>
+
+          <h3 style="margin:14px 0 8px;color:var(--white)">Redes</h3>
+          <div style="display:flex; gap:10px; margin-top:6px">
+            <a href="#" style="color:var(--muted); text-decoration:none">Instagram</a>
+            <a href="#" style="color:var(--muted); text-decoration:none">Facebook</a>
+          </div>
+        </div>
+
+        <div style="flex:1; min-width:260px">
+          <!-- Mapa estático (reemplazar con iframe de Google Maps si se quiere) -->
+          <div style="background:linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.05)); padding:12px; border-radius:8px; color:var(--muted)">
+            <strong>Cómo encontrarnos:</strong>
+            <div class="muted small" style="margin-top:8px">
+              Estamos en el centro, junto a la cafetería "la troje", frente al parque principal.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CART PANEL -->
+  <div class="cart-panel" id="cartPanel" aria-hidden="true">
+    <h4 style="margin-top:0;color:var(--white)">Tu carrito</h4>
+    <div id="cartContent"></div>
+    <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center">
+      <strong style="color:var(--white)">Total: <span id="cartTotal">0</span> MXN</strong>
+      <button id="checkoutBtn" class="btn btn-primary">Pagar</button>
+    </div>
+  </div>
+
+  <!-- FLOAT ACTIONS -->
+  <div class="float-actions">
+    <a href="tel:+525512345678" class="circle" title="Llamar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 15.46l-5.27-.61a1 1 0 0 0-1 .36l-2.2 2.92a16 16 0 0 1-7.28-7.28l2.92-2.2a1 1 0 0 0 .36-1L8.54 3 3 4.54C2.45 4.66 2 5.11 2 5.66 2 14.06 9.94 22 18.34 22c.55 0 1-.45 1.12-1L21 15.46z" stroke="#111" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+
+    <a href="https://wa.me/525512345678" target="_blank" rel="noopener" class="circle" title="WhatsApp">
+      <!-- WhatsApp icon simple -->
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 12a9 9 0 1 0-9 9v-3l.86-.86A6 6 0 1 1 21 12z" stroke="#111" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+
+    <a id="cartToggle" class="circle" title="Ver carrito" href="#" role="button" aria-label="Abrir carrito">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M6 6h15l-1.5 9h-12z" stroke="#111" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="9" cy="20" r="1" fill="#111"/><circle cx="18" cy="20" r="1" fill="#111"/></svg>
+    </a>
+  </div>
+
+  <footer>
+    <div class="container" style="max-width:900px">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">
+        <div>© <strong style="color:var(--white)">The King's Cut</strong> — Barbería </div>
+        <div class="muted">Diseñado para proyecto escolar • CREADOR:Carlos Alberto Muñoz Balleza</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /********** Booking: guarda en localStorage **********/
+    const bookingForm = document.getElementById('bookingForm');
+    const bookingMsg = document.getElementById('bookingMsg');
+    const bookingsList = document.getElementById('bookingsList');
+
+    function loadBookings(){
+      const b = JSON.parse(localStorage.getItem('bookings')||'[]');
+      if(b.length===0){
+        bookingsList.innerHTML = '<div class="cart-empty">No hay citas programadas.</div>';
+        return;
+      }
+      bookingsList.innerHTML = b.map(item => (
+        '<div style="padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03)"><strong style="color:var(--white)">'+item.name+'</strong> • '+item.service+'<br><span class="muted">'+item.date+' '+item.time+' • '+item.phone+'</span></div>'
+      )).join('');
+    }
+
+    bookingForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const service = document.getElementById('service').value;
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+      const notes = document.getElementById('notes').value.trim();
+
+      if(!name || !phone || !service || !date || !time){
+        bookingMsg.textContent = 'Por favor completa todos los campos requeridos.';
+        return;
+      }
+
+      // Validación simple de fecha: no permitir fechas pasadas
+      const today = new Date(); today.setHours(0,0,0,0);
+      const sel = new Date(date);
+      if(sel < today){ bookingMsg.textContent = 'Selecciona una fecha válida.'; return; }
+
+      const newBooking = {id:Date.now(), name, phone, service, date, time, notes};
+      const bookings = JSON.parse(localStorage.getItem('bookings')||'[]');
+      bookings.push(newBooking);
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+
+      bookingMsg.textContent = 'Cita reservada. ¡Gracias!';
+      bookingForm.reset();
+      loadBookings();
+
+      // opcional: copiar confirmación al portapapeles o abrir WhatsApp con mensaje prellenado
+    });
+
+    loadBookings();
+
+
+    /********** Simple Cart **********/
+    const addBtns = document.querySelectorAll('.add-btn');
+    const cartPanel = document.getElementById('cartPanel');
+    const cartContent = document.getElementById('cartContent');
+    const cartTotal = document.getElementById('cartTotal');
+    const cartToggle = document.getElementById('cartToggle');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+
+    function getCart(){ return JSON.parse(localStorage.getItem('cart')||'[]') }
+    function saveCart(c){ localStorage.setItem('cart', JSON.stringify(c)) }
+
+    function renderCart(){
+      const c = getCart();
+      if(c.length===0){
+        cartContent.innerHTML = '<div class="cart-empty">Tu carrito está vacío.</div>';
+        cartTotal.textContent = '0';
+        return;
+      }
+      cartContent.innerHTML = c.map(item=>(
+        '<div class="cart-line"><div><strong style="color:var(--white)">'+item.name+'</strong><div class="muted small">x'+item.qty+'</div></div><div><div class="muted small">$'+(item.price*item.qty)+'</div><button style="margin-top:6px;" data-id="'+item.id+'" class="add-btn remove">Eliminar</button></div></div>'
+      )).join('');
+      const total = c.reduce((s,i)=>s + (i.price*i.qty),0);
+      cartTotal.textContent = total;
+      // add event listeners for remove
+      document.querySelectorAll('.remove').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          const id = e.target.dataset.id;
+          const newC = getCart().filter(x=>x.id !== id);
+          saveCart(newC); renderCart();
+        });
+      });
+    }
+
+    addBtns.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.dataset.id;
+        const name = btn.dataset.name;
+        const price = Number(btn.dataset.price);
+        const cart = getCart();
+        const found = cart.find(x=>x.id===id);
+        if(found){ found.qty += 1; } else { cart.push({id,name,price,qty:1}); }
+        saveCart(cart); renderCart();
+        // mostrar panel
+        cartPanel.style.display = 'block'; cartPanel.setAttribute('aria-hidden','false');
+      });
+    });
+
+    cartToggle.addEventListener('click', (e)=>{
+      e.preventDefault();
+      if(cartPanel.style.display === 'block'){
+        cartPanel.style.display = 'none'; cartPanel.setAttribute('aria-hidden','true');
+      } else {
+        cartPanel.style.display = 'block'; cartPanel.setAttribute('aria-hidden','false');
+      }
+    });
+
+    checkoutBtn.addEventListener('click', ()=>{
+      const c = getCart();
+      if(c.length===0){ alert('El carrito está vacío.'); return; }
+      // Simulación de pago: limpiar carrito y mostrar mensaje
+      const total = c.reduce((s,i)=>s + (i.price*i.qty),0);
+      if(confirm('Total a pagar: $'+total+' MXN. Continuar con el pago?')){
+        localStorage.removeItem('cart');
+        renderCart();
+        alert('Pago simulado completado. Gracias por tu compra!');
+        cartPanel.style.display = 'none';
+      }
+    });
+
+    // inicial
+    renderCart();
+
+    // Close cart if click outside (small enhancement)
+    document.addEventListener('click', function(e){
+      if(!cartPanel.contains(e.target) && !cartToggle.contains(e.target) && cartPanel.style.display === 'block'){
+        // don't close if clicked an add-btn (they're inside products)
+        if(!e.target.classList.contains('add-btn')){ cartPanel.style.display = 'none'; cartPanel.setAttribute('aria-hidden','true'); }
+      }
+    });
+
+    /********** Smooth scroll for nav links **********/
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        // allow external links (with full URL) to behave normally
+        const href = this.getAttribute('href');
+        if(!href.startsWith('#')) return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+
+    /********** Small accessibility tweaks **********/
+    // Set min date for booking date: today
+    (function setMinDate(){
+      const dateInput = document.getElementById('date');
+      const today = new Date().toISOString().split('T')[0];
+      if(dateInput) dateInput.min = today;
+    })();
+
+  </script>
+
+</body>
+</html>
